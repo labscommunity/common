@@ -1,0 +1,29 @@
+{
+  "name": "verto-internals",
+  "version": "0.9.1",
+  "description": "A collection of common code shared throughout Verto",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deliver": "npm publish --access=public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/useverto/internals.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/useverto/internals/issues"
+  },
+  "homepage": "https://github.com/useverto/internals#readme",
+  "devDependencies": {
+    "@types/node": "^17.0.9",
+    "@nestjs/cli": "^8.1.1"
+  },
+  "dependencies": {
+    "@google-cloud/datastore": "^6.6.2",
+    "@google-cloud/storage": "^5.17.0",
+    "@nestjs/common": "^8.2.5"
+  }
+}
