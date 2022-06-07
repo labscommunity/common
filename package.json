@@ -1,7 +1,7 @@
 {
-  "name": "verto-internals",
-  "version": "0.9.1",
-  "description": "A collection of common code shared throughout Verto",
+  "name": "@clabs/common",
+  "version": "0.1.0",
+  "description": "A collection of common code shared throughout CLabs",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,21 +9,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/useverto/internals.git"
+    "url": "git+https://github.com/labscommunity/common.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/useverto/internals/issues"
+    "url": "https://github.com/labscommunity/common/issues"
   },
-  "homepage": "https://github.com/useverto/internals#readme",
+  "homepage": "https://github.com/labscommunity/common#readme",
   "devDependencies": {
     "@types/node": "^17.0.9",
     "@nestjs/cli": "^8.1.1"
   },
   "dependencies": {
     "@google-cloud/datastore": "^6.6.2",
-    "@google-cloud/storage": "^5.17.0",
-    "@nestjs/common": "^8.2.5"
+    "@google-cloud/storage": "^5.17.0"
   }
 }

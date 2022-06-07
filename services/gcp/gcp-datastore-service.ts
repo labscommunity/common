@@ -1,7 +1,6 @@
-import {Injectable} from "@nestjs/common";
 import {Datastore, Query} from "@google-cloud/datastore";
 import {GcpCredentials} from "./gcp-credentials";
-import {DatastoreEntities, DatastoreEntity, DatastoreKinds, EntityBuilder, Queryable, QueryResult} from "./models";
+import {DatastoreEntities, DatastoreEntity, EntityBuilder, Queryable, QueryResult} from "./models";
 import {Entities, entity} from "@google-cloud/datastore/build/src/entity";
 import {RunQueryOptions, RunQueryResponse} from "@google-cloud/datastore/build/src/query";
 import {GetResponse, SaveResponse } from "@google-cloud/datastore/build/src/request";
@@ -10,8 +9,7 @@ import { sleep } from "../../utils";
 /**
  * This service is responsible for interacting with Datastore on a common basis.
  */
-@Injectable()
-export class GcpDatastoreService {
+export class GcpDatastoreService<Kind = string> {
 
     private datastoreInstance: Datastore;
 
@@ -24,7 +22,7 @@ export class GcpDatastoreService {
      * @param kind Kind of the datastore information
      * @param id to be contained by the datastore row
      */
-    createKey(kind: DatastoreKinds, id: any): entity.Key {
+    createKey(kind: Kind | string, id: any): entity.Key {
         return this.datastoreInstance.key([kind, id]);
     }
 
@@ -44,7 +42,7 @@ export class GcpDatastoreService {
      * Saves ane entity based on {@link EntityBuilder}
      * @param entity
      */
-    saveFull<T = any>(entity: EntityBuilder<Partial<T>>): Promise<SaveResponse> {
+    saveFull<T = any>(entity: EntityBuilder<Partial<T>, Kind>): Promise<SaveResponse> {
         const key = this.createKey(entity.kind, entity.id);
         const savedEntity = this.buildEntity(key, entity.data);
         return this.save(savedEntity);
@@ -84,7 +82,7 @@ export class GcpDatastoreService {
      * Get all the rows in a table
      * @param kind
      */
-    getAll(kind: DatastoreKinds) {
+    getAll(kind: Kind) {
         return this.query(kind, (q) => q);
     }
 
@@ -110,7 +108,8 @@ export class GcpDatastoreService {
      * @param processor a query builder that modifies the main query. Useful to add filters, orders, etc.
      * @param options Options to be held by the query at execution
      */
-    async query(kind: DatastoreKinds, processor: (query: Query) => Query, options?: RunQueryOptions): Promise<RunQueryResponse> {
+    async query(kind: Kind, processor: (query: Query) => Query, options?: RunQueryOptions): Promise<RunQueryResponse> {
+        // @ts-ignore
         let query = this.datastoreInstance.createQuery(kind);
         if(processor) {
             query = processor(query);
@@ -131,7 +130,8 @@ export class GcpDatastoreService {
      * Creates a query based on {@link Queryable} which works as a helper for filters, limit, offset.
      * @param query Structure of query
      */
-    async invokeQuery<T = any>(query: Queryable): Promise<QueryResult<T>> {
+    async invokeQuery<T = any>(query: Queryable<Kind>): Promise<QueryResult<T>> {
+        // @ts-ignore
         let gdQuery = this.datastoreInstance.createQuery(query.kind);
         const { limit, offset, filters, order } = query;
 
@@ -153,6 +153,7 @@ export class GcpDatastoreService {
             gdQuery = gdQuery.order(order[0], order[1]);
         }
 
+        // @ts-ignore
         const data = await this.query(query.kind, (query) => gdQuery) || [];
         return {
             entities: data[0] || [],

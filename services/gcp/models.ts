@@ -15,18 +15,6 @@ export interface GcpCredentialsProvider {
     client_x509_cert_url: string;
 }
 
-export enum DatastoreKinds {
-    CONTRACTS = "CONTRACTS",
-    COMMUNITY_TOKENS = "COMMUNITY_TOKENS",
-    COMMUNITY_PEOPLE = "COMMUNITY_PEOPLE",
-    CONTRACTS_VS_ADDRESS = "CONTRACTS_VS_ADDRESS",
-    RECOVERABLE_CONTRACTS = "RECOVERABLE_CONTRACTS",
-    FAILED_CONTRACTS = "FAILED_CONTRACTS",
-    BLACKLISTED_CONTRACTS = "BLACKLISTED_CONTRACTS",
-    METRICS = "METRICS",
-    BALANCES = "BALANCES"
-}
-
 export type DatastoreEntities = entity.Key | Array<entity.Key>;
 
 export interface DatastoreEntity<T = any> {
@@ -34,8 +22,8 @@ export interface DatastoreEntity<T = any> {
     data: T;
 }
 
-export interface EntityBuilder<T = any> {
-    kind: DatastoreKinds,
+export interface EntityBuilder<T = any, Kind = string> {
+    kind: Kind | string,
     id: string,
     data: T;
 }
@@ -53,8 +41,8 @@ export interface QueryableBase {
     order?: [string, OrderOptions];
 }
 
-export interface Queryable extends QueryableBase {
-    kind: DatastoreKinds;
+export interface Queryable<Kind = string> extends QueryableBase {
+    kind: Kind | string;
 }
 
 export interface QueryResultBase<T = any> {

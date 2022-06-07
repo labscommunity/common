@@ -1,6 +1,5 @@
 import {Bucket, CreateBucketResponse, File, Storage} from "@google-cloud/storage";
 import {CreateBucketRequest} from "@google-cloud/storage/build/src/storage";
-import {Injectable} from "@nestjs/common";
 import {FileSaveInfo} from "./models";
 import {GetResponse} from "@google-cloud/common/build/src/service-object";
 import {GcpCredentials} from "./gcp-credentials";
@@ -8,7 +7,6 @@ import {GcpCredentials} from "./gcp-credentials";
 /**
  * This service interacts with the google data storage CDN.
  */
-@Injectable()
 export class GcpStorageService {
 
     private storageInstance: Storage;
