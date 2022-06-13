@@ -58,7 +58,7 @@ export interface QueryResult<T = any> extends QueryResultBase<T> {
 
 export interface PaginatedQueryResult<T = any> {
     entities: Array<T>,
-    nextPage: () => Promise<Array<T>>
+    nextPage: () => Promise<PaginatedQueryResult<T>> | undefined;
 }
 
 export interface FileSaveInfo {

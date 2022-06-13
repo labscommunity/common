@@ -10,8 +10,8 @@ import {
 } from "./models";
 import {Entities, entity} from "@google-cloud/datastore/build/src/entity";
 import {RunQueryOptions, RunQueryResponse} from "@google-cloud/datastore/build/src/query";
-import {GetResponse, SaveResponse } from "@google-cloud/datastore/build/src/request";
-import { sleep } from "../../utils";
+import {GetResponse, SaveResponse} from "@google-cloud/datastore/build/src/request";
+import {sleep} from "../../utils";
 
 /**
  * This service is responsible for interacting with Datastore on a common basis.
@@ -183,13 +183,15 @@ export class GcpDatastoreService<Kind = string> {
             entities: runQuery.entities,
             nextPage: async () => {
                 if(runQuery.cursor && !runQuery.isEmpty()) {
-                    const data = await this.invokePaginatedQuery<T>({
+                    return await this.invokePaginatedQuery<T>({
                         ...query,
                         cursor: runQuery.cursor
                     });
-                    return data.entities;
                 } else {
-                    return [];
+                    return {
+                        entities: [],
+                        nextPage: () => undefined
+                    };
                 }
             }
         }
