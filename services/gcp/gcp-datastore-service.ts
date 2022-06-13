@@ -1,6 +1,13 @@
 import {Datastore, Query} from "@google-cloud/datastore";
 import {GcpCredentials} from "./gcp-credentials";
-import {DatastoreEntities, DatastoreEntity, EntityBuilder, Queryable, QueryResult} from "./models";
+import {
+    DatastoreEntities,
+    DatastoreEntity,
+    EntityBuilder,
+    PaginatedQueryResult,
+    Queryable,
+    QueryResult
+} from "./models";
 import {Entities, entity} from "@google-cloud/datastore/build/src/entity";
 import {RunQueryOptions, RunQueryResponse} from "@google-cloud/datastore/build/src/query";
 import {GetResponse, SaveResponse } from "@google-cloud/datastore/build/src/request";
@@ -133,7 +140,7 @@ export class GcpDatastoreService<Kind = string> {
     async invokeQuery<T = any>(query: Queryable<Kind>): Promise<QueryResult<T>> {
         // @ts-ignore
         let gdQuery = this.datastoreInstance.createQuery(query.kind);
-        const { limit, offset, filters, order } = query;
+        const { limit, offset, filters, order, cursor } = query;
 
         if(limit) {
             gdQuery = gdQuery.limit(limit);
@@ -153,13 +160,37 @@ export class GcpDatastoreService<Kind = string> {
             gdQuery = gdQuery.order(order[0], order[1]);
         }
 
+        if(cursor) {
+            gdQuery = gdQuery.start(cursor);
+        }
+
         // @ts-ignore
         const data = await this.query(query.kind, (query) => gdQuery) || [];
+        const queryInfo = data[1] || {};
         return {
             entities: data[0] || [],
-            resultsStatus: (data[1] || {}).moreResults || 'NO_RESULTS',
+            resultsStatus: queryInfo.moreResults || 'NO_RESULTS',
+            cursor: queryInfo.endCursor,
             isEmpty: function() {
                 return this.resultsStatus === 'NO_RESULTS'
+            }
+        }
+    }
+
+    async invokePaginatedQuery<T = any>(query: Queryable<Kind>): Promise<PaginatedQueryResult<T>> {
+        const runQuery = await this.invokeQuery<T>(query);
+        return {
+            entities: runQuery.entities,
+            nextPage: async () => {
+                if(runQuery.cursor && !runQuery.isEmpty()) {
+                    const data = await this.invokePaginatedQuery<T>({
+                        ...query,
+                        cursor: runQuery.cursor
+                    });
+                    return data.entities;
+                } else {
+                    return [];
+                }
             }
         }
     }

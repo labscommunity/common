@@ -39,6 +39,7 @@ export interface QueryableBase {
     offset?: number;
     filters?: Array<QueryableFilter>;
     order?: [string, OrderOptions];
+    cursor?: string;
 }
 
 export interface Queryable<Kind = string> extends QueryableBase {
@@ -48,10 +49,16 @@ export interface Queryable<Kind = string> extends QueryableBase {
 export interface QueryResultBase<T = any> {
     entities: Array<T>;
     resultsStatus: string;
+    cursor: string | undefined;
 }
 
 export interface QueryResult<T = any> extends QueryResultBase<T> {
     isEmpty: () => boolean
+}
+
+export interface PaginatedQueryResult<T = any> {
+    entities: Array<T>,
+    nextPage: () => Promise<Array<T>>
 }
 
 export interface FileSaveInfo {
