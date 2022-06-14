@@ -192,10 +192,12 @@ export class GcpDatastoreService<Kind = string> {
                 } else {
                     return {
                         entities: [],
-                        nextPage: () => undefined
+                        nextPage: () => undefined,
+                        cursor: undefined
                     };
                 }
-            }
+            },
+            cursor: runQuery.cursor
         }
     }
 
