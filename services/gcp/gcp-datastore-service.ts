@@ -37,11 +37,13 @@ export class GcpDatastoreService<Kind = string> {
      * Builds an entity based on a key and a data.
      * @param key
      * @param data
+     * @param excludeFromIndexes
      */
-    buildEntity<T = any>(key: entity.Key, data: T): DatastoreEntity<T> {
+    buildEntity<T = any>(key: entity.Key, data: T, excludeFromIndexes?: Array<string>): DatastoreEntity<T> {
         return {
             key,
-            data
+            data,
+            excludeFromIndexes
         }
     }
 
@@ -51,7 +53,7 @@ export class GcpDatastoreService<Kind = string> {
      */
     saveFull<T = any>(entity: EntityBuilder<Partial<T>, Kind>): Promise<SaveResponse> {
         const key = this.createKey(entity.kind, entity.id);
-        const savedEntity = this.buildEntity(key, entity.data);
+        const savedEntity = this.buildEntity(key, entity.data, entity.excludeFromIndexes);
         return this.save(savedEntity);
     }
 

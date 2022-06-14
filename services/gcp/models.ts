@@ -20,12 +20,14 @@ export type DatastoreEntities = entity.Key | Array<entity.Key>;
 export interface DatastoreEntity<T = any> {
     key: entity.Key;
     data: T;
+    excludeFromIndexes?: Array<string>
 }
 
 export interface EntityBuilder<T = any, Kind = string> {
     kind: Kind | string,
     id: string,
     data: T;
+    excludeFromIndexes?: Array<string>
 }
 
 export interface QueryableFilter {
