@@ -197,6 +197,10 @@ export class GcpDatastoreService<Kind = string> {
         }
     }
 
+    getDatastoreInstance() {
+        return this.datastoreInstance;
+    }
+
     private renewConnection(): void {
         const credentials = GcpCredentials.getCredentials();
         this.datastoreInstance = new Datastore({
