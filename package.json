@@ -1,6 +1,6 @@
 {
   "name": "@communitylabs/common",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Common codebase for @clabs",
   "main": "index.js",
   "devDependencies": {

@@ -42,6 +42,7 @@ export interface QueryableBase {
     filters?: Array<QueryableFilter>;
     order?: [string, OrderOptions];
     cursor?: string;
+    groupBy?: string | string[];
 }
 
 export interface Queryable<Kind = string> extends QueryableBase {
