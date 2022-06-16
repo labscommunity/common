@@ -142,7 +142,7 @@ export class GcpDatastoreService<Kind = string> {
     async invokeQuery<T = any>(query: Queryable<Kind>): Promise<QueryResult<T>> {
         // @ts-ignore
         let gdQuery = this.datastoreInstance.createQuery(query.kind);
-        const { limit, offset, filters, order, cursor, groupBy } = query;
+        const { limit, offset, filters, order, cursor, groupBy, projection } = query;
 
         if(limit) {
             gdQuery = gdQuery.limit(limit);
@@ -168,6 +168,10 @@ export class GcpDatastoreService<Kind = string> {
 
         if(groupBy) {
             gdQuery = gdQuery.groupBy(groupBy)
+        }
+
+        if(projection) {
+            gdQuery = gdQuery.select(projection);
         }
 
         // @ts-ignore

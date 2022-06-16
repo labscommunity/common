@@ -43,6 +43,7 @@ export interface QueryableBase {
     order?: [string, OrderOptions];
     cursor?: string;
     groupBy?: string | string[];
+    projection?: string | string[];
 }
 
 export interface Queryable<Kind = string> extends QueryableBase {
