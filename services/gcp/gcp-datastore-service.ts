@@ -52,9 +52,16 @@ export class GcpDatastoreService<Kind = string> {
      * @param entity
      */
     saveFull<T = any>(entity: EntityBuilder<Partial<T>, Kind>): Promise<SaveResponse> {
-        const key = this.createKey(entity.kind, entity.id);
-        const savedEntity = this.buildEntity(key, entity.data, entity.excludeFromIndexes);
+        const savedEntity = this.entityBuilderToEntity(entity);
         return this.save(savedEntity);
+    }
+
+    /**
+     *
+     */
+    entityBuilderToEntity<T = any>(entity: EntityBuilder<Partial<T>, Kind>) {
+        const key = this.createKey(entity.kind, entity.id);
+        return this.buildEntity(key, entity.data, entity.excludeFromIndexes);
     }
 
     /**
